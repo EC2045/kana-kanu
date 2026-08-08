@@ -195,6 +195,12 @@
     font-weight: 600;
   }
 
+  .kana-cell {
+    font-family: 'KanaKanu', sans-serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+
   .example-block {
     background: #0c0e24;
     border-radius: 10px;
@@ -355,41 +361,41 @@
     </div>
 
     <div class="grammar-section">
-      <h3>■ 音素対応表（ローマ字仮表記 → 発音）</h3>
-      <table>
+      <h3>■ 音素対応表（カナーカヌ文字 → 発音）</h3>
+      <table class="phoneme-table">
         <tr><th>文字</th><th>音価</th><th>種別</th></tr>
-        <tr><td>a</td><td>[a]</td><td>母音</td></tr>
-        <tr><td>b</td><td>[o]</td><td>母音</td></tr>
-        <tr><td>e</td><td>[y]</td><td>母音</td></tr>
-        <tr><td>v</td><td>[i]</td><td>母音</td></tr>
-        <tr><td>3</td><td>[æ]</td><td>母音</td></tr>
-        <tr><td>n</td><td>[u]</td><td>母音</td></tr>
-        <tr><td>l</td><td>[e]</td><td>母音</td></tr>
-        <tr><td>i</td><td>[ɯ]</td><td>母音</td></tr>
-        <tr><td>m</td><td>[ɸ]</td><td>子音</td></tr>
-        <tr><td>9</td><td>[ɹ]</td><td>子音</td></tr>
-        <tr><td>p</td><td>[m]</td><td>子音</td></tr>
-        <tr><td>c</td><td>[j]</td><td>子音（語末で無音化マーカー）</td></tr>
-        <tr><td>d</td><td>[β]</td><td>子音</td></tr>
-        <tr><td>7</td><td>[h]</td><td>子音</td></tr>
-        <tr><td>g</td><td>[q]</td><td>子音</td></tr>
-        <tr><td>o</td><td>[l]</td><td>子音</td></tr>
-        <tr><td>y</td><td>[z]</td><td>子音</td></tr>
-        <tr><td>5</td><td>[f]</td><td>子音</td></tr>
-        <tr><td>t</td><td>[ʐ]</td><td>子音</td></tr>
-        <tr><td>z</td><td>[ɲ]</td><td>子音</td></tr>
-        <tr><td>1</td><td>[d]</td><td>子音（文法上は時制マーカー「現在」）</td></tr>
-        <tr><td>2</td><td>[ʃʼ]</td><td>子音（放出音）</td></tr>
-        <tr><td>q</td><td>[ɬʼ]</td><td>子音（放出音）</td></tr>
-        <tr><td>0</td><td>[k]</td><td>子音</td></tr>
-        <tr><td>4</td><td>[s]</td><td>子音</td></tr>
-        <tr><td>u</td><td>[ə]</td><td>母音</td></tr>
-        <tr><td>8</td><td>[ɔ]</td><td>母音</td></tr>
-        <tr><td>x</td><td>[ts]</td><td>子音</td></tr>
-        <tr><td>w</td><td>[w]</td><td>子音</td></tr>
-        <tr><td>j</td><td>[ɡ]</td><td>子音</td></tr>
-        <tr><td>r</td><td>[r]</td><td>子音</td></tr>
-        <tr><td>6</td><td>[ʔ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">a</td><td>[a]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">b</td><td>[o]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">e</td><td>[y]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">v</td><td>[i]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">3</td><td>[æ]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">n</td><td>[u]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">l</td><td>[e]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">i</td><td>[ɯ]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">m</td><td>[ɸ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">9</td><td>[ɹ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">p</td><td>[m]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">c</td><td>[j]</td><td>子音（語末で無音化マーカー）</td></tr>
+        <tr><td class="kana-cell">d</td><td>[β]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">7</td><td>[h]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">g</td><td>[q]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">o</td><td>[l]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">y</td><td>[z]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">5</td><td>[f]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">t</td><td>[ʐ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">z</td><td>[ɲ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">1</td><td>[d]</td><td>子音（文法上は時制マーカー「現在」）</td></tr>
+        <tr><td class="kana-cell">2</td><td>[ʃʼ]</td><td>子音（放出音）</td></tr>
+        <tr><td class="kana-cell">q</td><td>[ɬʼ]</td><td>子音（放出音）</td></tr>
+        <tr><td class="kana-cell">0</td><td>[k]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">4</td><td>[s]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">u</td><td>[ə]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">8</td><td>[ɔ]</td><td>母音</td></tr>
+        <tr><td class="kana-cell">x</td><td>[ts]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">w</td><td>[w]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">j</td><td>[ɡ]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">r</td><td>[r]</td><td>子音</td></tr>
+        <tr><td class="kana-cell">6</td><td>[ʔ]</td><td>子音</td></tr>
       </table>
     </div>
 
