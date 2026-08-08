@@ -7,7 +7,7 @@
 <style>
   @font-face {
     font-family: 'KanaKanu';
-    src: url('https://ec2045.github.io/kana-kanu/kanakanu.ttf') format('truetype');
+    src: url('https://github.com/EC2045/kana-kanu/blob/main/kanakanu.ttf?raw=true') format('truetype');
     font-display: swap;
   }
 
@@ -439,24 +439,26 @@
   }
 
   // 1単語をア補完ルールに従って文字配列（挿入済み）に変換
-  function applyAHokan(word) {
-    const chars = word.split('');
+  // ルール:
+  //  - 子音の連続が2文字のみで、かつ単語末尾で終わる場合 → 語末にaを補完
+  //  - 子音の連続が3文字以上 → 連続を断ち切る最小限の1箇所（最後の直前）にaを挿入
+  //  - 子音の直後に母音が続く場合は、その連続を子音だけの並びとして扱う（母音自体が断ち切っている）
+  function applyAHokan(chars) {
     const result = [];
     let consonantStreak = [];
 
-    function flushStreak(nextIsVowelOrEnd) {
+    function flushStreak(isWordEnd) {
       if (consonantStreak.length === 0) return;
-      if (consonantStreak.length === 2 && nextIsVowelOrEnd) {
-        // 2文字子音のみの単語 → 語末にア補完
+      if (consonantStreak.length <= 1) {
         result.push(...consonantStreak);
-        result.push('a');
-      } else if (consonantStreak.length >= 3) {
+      } else if (consonantStreak.length === 2) {
+        result.push(...consonantStreak);
+        if (isWordEnd) result.push('a'); // 語末の子音2連続のみ補完
+      } else {
         // 3連続以上 → 最後の直前にa挿入
         result.push(...consonantStreak.slice(0, -1));
         result.push('a');
         result.push(consonantStreak[consonantStreak.length - 1]);
-      } else {
-        result.push(...consonantStreak);
       }
       consonantStreak = [];
     }
@@ -464,14 +466,13 @@
     for (let i = 0; i < chars.length; i++) {
       const ch = chars[i];
       if (isVowelChar(ch)) {
-        flushStreak(false);
+        flushStreak(false); // 母音の直前なので語末補完はしない
         result.push(ch);
       } else {
         consonantStreak.push(ch);
       }
     }
-    // 末尾処理
-    flushStreak(true);
+    flushStreak(true); // 単語末尾
 
     return result;
   }
@@ -486,10 +487,21 @@
       tenseMarker = m[2];
     }
 
-    const processed = applyAHokan(core.toLowerCase());
+    let chars = core.toLowerCase().split('');
+
+    // マジックeルール: 末尾がcの場合、cは発音せず（無音化）、
+    // cの前から2番目の音の読みが変化する（変化規則は未確定のため、現状は表示上cを除去するのみ）
+    let magicCApplied = false;
+    if (chars.length >= 1 && chars[chars.length - 1] === 'c') {
+      chars = chars.slice(0, -1); // cを無音化（発音対象から除去）
+      magicCApplied = true;
+    }
+
+    const processed = applyAHokan(chars);
     let ipa = processed.map(ch => phonemeMap[ch] || ch).join('');
     let kana = processed.map(ch => ipaToKana[phonemeMap[ch]] || '').join('');
-    let kanaChars = processed.join(''); // カナーカヌ文字表示用（同じローマ字仮表記を専用フォントで表示）
+    // カナーカヌ文字表示用：無音化されたcも含め、元の綴りをそのまま専用フォントで表示
+    let kanaChars = processed.join('') + (magicCApplied ? 'c' : '');
 
     if (tenseMarker) {
       const tenseIPA = phonemeMap[tenseMarker] || tenseMarker;
@@ -540,31 +552,62 @@
     outKatakana.textContent = kana;
   }
 
-  inputEl.addEventListener('input', update);
+  // カナーカヌ文字テキストをcanvasに描画し、PNG画像としてコピー/ダウンロードできるようにする
+  function renderKanaToCanvas(text, fontSizePx) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const fontSize = fontSizePx || 48;
+    const font = `${fontSize}px 'KanaKanu', sans-serif`;
+    ctx.font = font;
 
-  // 例文のカナーカヌ文字表示（フォントで表示するのでそのままラテン仮表記を流し込む）
-  document.querySelectorAll('.example-block .kana').forEach(el => {
-    el.textContent = el.getAttribute('data-latin');
-  });
+    const paddingX = 24;
+    const paddingY = 20;
+    const maxWidth = 1000; // この幅で折り返す
 
-  // コピー処理（共通ヘルパー）
-  function copyText(text, btnEl) {
-    const doFallback = () => {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      try { document.execCommand('copy'); } catch (e) {}
-      document.body.removeChild(ta);
-    };
+    // 折り返し処理（単語単位、スペース区切りは保持）
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    words.forEach(w => {
+      const testLine = currentLine ? currentLine + ' ' + w : w;
+      if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = w;
+      } else {
+        currentLine = testLine;
+      }
+    });
+    if (currentLine) lines.push(currentLine);
 
-    const showCopied = () => {
+    const lineHeight = fontSize * 1.4;
+    let widestLine = 0;
+    lines.forEach(l => {
+      const w = ctx.measureText(l).width;
+      if (w > widestLine) widestLine = w;
+    });
+
+    canvas.width = Math.ceil(widestLine + paddingX * 2);
+    canvas.height = Math.ceil(lineHeight * lines.length + paddingY * 2);
+
+    // 背景（透明ではなくダーク背景にして見やすく）
+    ctx.fillStyle = '#08091a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = font;
+    ctx.fillStyle = '#7fd9ff';
+    ctx.textBaseline = 'top';
+    lines.forEach((line, i) => {
+      ctx.fillText(line, paddingX, paddingY + i * lineHeight);
+    });
+
+    return canvas;
+  }
+
+  function copyCanvasAsImage(canvas, btnEl) {
+    const showResult = (ok) => {
       if (!btnEl) return;
       const original = btnEl.textContent;
-      btnEl.textContent = 'コピー済み';
+      btnEl.textContent = ok ? 'コピー済み' : 'コピー失敗';
       btnEl.classList.add('copied');
       setTimeout(() => {
         btnEl.textContent = original;
@@ -572,30 +615,68 @@
       }, 1500);
     };
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(showCopied).catch(() => {
-        doFallback();
-        showCopied();
-      });
+    canvas.toBlob(blob => {
+      if (!blob) { showResult(false); return; }
+
+      if (navigator.clipboard && window.ClipboardItem) {
+        navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]).then(() => showResult(true)).catch(() => {
+          downloadBlob(blob);
+          showResult(true);
+        });
+      } else {
+        // クリップボード画像APIが使えない環境はダウンロードにフォールバック
+        downloadBlob(blob);
+        showResult(true);
+      }
+    }, 'image/png');
+  }
+
+  function downloadBlob(blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kanakanu.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function copyKanaTextAsImage(text, btnEl, fontSizePx) {
+    if (!text || text === '—') return;
+    // フォント読み込みを待ってから描画（未読込だと文字化けするため）
+    const doRender = () => {
+      const canvas = renderKanaToCanvas(text, fontSizePx);
+      copyCanvasAsImage(canvas, btnEl);
+    };
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load(`48px 'KanaKanu'`).then(doRender).catch(doRender);
     } else {
-      doFallback();
-      showCopied();
+      doRender();
     }
   }
 
-  // 変換ツール側：カナーカヌ文字コピー
+  inputEl.addEventListener('input', update);
+
+  // 例文のカナーカヌ文字表示（フォントで表示するのでそのままラテン仮表記を流し込む）
+  document.querySelectorAll('.example-block .kana').forEach(el => {
+    el.textContent = el.getAttribute('data-latin');
+  });
+
+  // 変換ツール側：カナーカヌ文字を画像としてコピー
   const copyKanaBtn = document.getElementById('copyKanaBtn');
   copyKanaBtn.addEventListener('click', () => {
     const text = outKana.textContent;
-    if (!text || text === '—') return;
-    copyText(text, copyKanaBtn);
+    copyKanaTextAsImage(text, copyKanaBtn, 56);
   });
 
-  // 例文側：それぞれのコピー
+  // 例文側：それぞれを画像としてコピー
   document.querySelectorAll('.example-block .copy-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const text = btn.getAttribute('data-copy-target');
-      copyText(text, btn);
+      copyKanaTextAsImage(text, btn, 40);
     });
   });
 </script>
