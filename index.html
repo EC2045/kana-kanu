@@ -143,6 +143,41 @@
 
   .result-box.ipa .value { color: var(--accent2); }
 
+  .copy-btn {
+    margin-top: 10px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .copy-btn:hover {
+    background: var(--accent);
+    color: #08091a;
+  }
+
+  .copy-btn.copied {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  .example-block .copy-btn {
+    margin-top: 0;
+    margin-left: 10px;
+    margin-bottom: 8px;
+  }
+
+  .example-block .kana-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
@@ -230,6 +265,7 @@
         <div class="result-box kana">
           <div class="label">カナーカヌ文字</div>
           <div class="value" id="outputKana">—</div>
+          <button class="copy-btn" id="copyKanaBtn" type="button">コピー</button>
         </div>
         <div class="result-box ipa">
           <div class="label">発音記号（IPA風）</div>
@@ -248,19 +284,28 @@
 
     <div class="example-block">
       <div class="latin">kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr</div>
-      <div class="kana" data-latin="kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr"></div>
+      <div class="kana-row">
+        <div class="kana" data-latin="kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr"></div>
+        <button class="copy-btn" type="button" data-copy-target="kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr">コピー</button>
+      </div>
       <div class="meaning">全ての文字は表示するために集まる、ここに。なぜならこれは例文だから。</div>
     </div>
 
     <div class="example-block">
       <div class="latin">fk dks1 rmks</div>
-      <div class="kana" data-latin="fk dks1 rmks"></div>
+      <div class="kana-row">
+        <div class="kana" data-latin="fk dks1 rmks"></div>
+        <button class="copy-btn" type="button" data-copy-target="fk dks1 rmks">コピー</button>
+      </div>
       <div class="meaning">私はりんごを食べる。</div>
     </div>
 
     <div class="example-block">
       <div class="latin">fk dks1 rmks rpsj</div>
-      <div class="kana" data-latin="fk dks1 rmks rpsj"></div>
+      <div class="kana-row">
+        <div class="kana" data-latin="fk dks1 rmks rpsj"></div>
+        <button class="copy-btn" type="button" data-copy-target="fk dks1 rmks rpsj">コピー</button>
+      </div>
       <div class="meaning">私は美しい（綺麗な）りんごを食べる。</div>
     </div>
   </section>
@@ -500,6 +545,58 @@
   // 例文のカナーカヌ文字表示（フォントで表示するのでそのままラテン仮表記を流し込む）
   document.querySelectorAll('.example-block .kana').forEach(el => {
     el.textContent = el.getAttribute('data-latin');
+  });
+
+  // コピー処理（共通ヘルパー）
+  function copyText(text, btnEl) {
+    const doFallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    };
+
+    const showCopied = () => {
+      if (!btnEl) return;
+      const original = btnEl.textContent;
+      btnEl.textContent = 'コピー済み';
+      btnEl.classList.add('copied');
+      setTimeout(() => {
+        btnEl.textContent = original;
+        btnEl.classList.remove('copied');
+      }, 1500);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(() => {
+        doFallback();
+        showCopied();
+      });
+    } else {
+      doFallback();
+      showCopied();
+    }
+  }
+
+  // 変換ツール側：カナーカヌ文字コピー
+  const copyKanaBtn = document.getElementById('copyKanaBtn');
+  copyKanaBtn.addEventListener('click', () => {
+    const text = outKana.textContent;
+    if (!text || text === '—') return;
+    copyText(text, copyKanaBtn);
+  });
+
+  // 例文側：それぞれのコピー
+  document.querySelectorAll('.example-block .copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-copy-target');
+      copyText(text, btn);
+    });
   });
 </script>
 
