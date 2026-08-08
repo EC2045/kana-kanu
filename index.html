@@ -7,7 +7,7 @@
 <style>
   @font-face {
     font-family: 'KanaKanu';
-    src: url('https://ec2045.github.io/kana-kanu/kanakanu.ttf') format('truetype');
+    src: url('https://github.com/EC2045/kana-kanu/blob/main/kanakanu.ttf?raw=true') format('truetype');
     font-display: swap;
   }
 
@@ -603,34 +603,13 @@
     return canvas;
   }
 
-  function copyCanvasAsImage(canvas, btnEl) {
-    const showResult = (ok) => {
-      if (!btnEl) return;
-      const original = btnEl.textContent;
-      btnEl.textContent = ok ? 'コピー済み' : 'コピー失敗';
-      btnEl.classList.add('copied');
-      setTimeout(() => {
-        btnEl.textContent = original;
-        btnEl.classList.remove('copied');
-      }, 1500);
-    };
-
-    canvas.toBlob(blob => {
-      if (!blob) { showResult(false); return; }
-
-      if (navigator.clipboard && window.ClipboardItem) {
-        navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]).then(() => showResult(true)).catch(() => {
-          downloadBlob(blob);
-          showResult(true);
-        });
-      } else {
-        // クリップボード画像APIが使えない環境はダウンロードにフォールバック
-        downloadBlob(blob);
-        showResult(true);
-      }
-    }, 'image/png');
+  function canvasToBlobPromise(canvas) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error('Canvas toBlob failed'));
+      }, 'image/png');
+    });
   }
 
   function downloadBlob(blob) {
@@ -644,17 +623,57 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  // クリップボードへの書き込みは「ユーザークリックの直後」に navigator.clipboard.write を
+  // 呼び出す必要がある（特にSafari）。フォント読み込みやcanvas描画などの非同期処理を
+  // 先に済ませてから write() を呼ぶと、ユーザージェスチャーの有効期限が切れて失敗しやすい。
+  // そのため、write() 自体はクリックハンドラの中で即座に呼び、
+  // 実際のBlob生成は ClipboardItem に渡す Promise の中で行う。
   function copyKanaTextAsImage(text, btnEl, fontSizePx) {
     if (!text || text === '—') return;
-    // フォント読み込みを待ってから描画（未読込だと文字化けするため）
-    const doRender = () => {
-      const canvas = renderKanaToCanvas(text, fontSizePx);
-      copyCanvasAsImage(canvas, btnEl);
+
+    const showResult = (ok) => {
+      if (!btnEl) return;
+      const original = btnEl.dataset.originalLabel || btnEl.textContent;
+      btnEl.dataset.originalLabel = original;
+      btnEl.textContent = ok ? 'コピー済み' : 'コピー失敗';
+      btnEl.classList.add('copied');
+      setTimeout(() => {
+        btnEl.textContent = original;
+        btnEl.classList.remove('copied');
+      }, 1500);
     };
-    if (document.fonts && document.fonts.load) {
-      document.fonts.load(`48px 'KanaKanu'`).then(doRender).catch(doRender);
+
+    // フォント読み込み→canvas描画→Blob化までを1つのPromiseにまとめる
+    const buildBlob = async () => {
+      if (document.fonts && document.fonts.load) {
+        try { await document.fonts.load(`${fontSizePx}px 'KanaKanu'`); } catch (e) { /* 読み込み失敗時もフォールバックで続行 */ }
+      }
+      const canvas = renderKanaToCanvas(text, fontSizePx);
+      return canvasToBlobPromise(canvas);
+    };
+
+    if (navigator.clipboard && window.ClipboardItem) {
+      // クリックハンドラ内で即座に write() を呼ぶ。Blobの中身は buildBlob() の
+      // Promiseが解決してから渡される（Safariの権限チェックをすり抜けるための構成）。
+      const item = new ClipboardItem({ 'image/png': buildBlob() });
+      navigator.clipboard.write([item])
+        .then(() => showResult(true))
+        .catch(async (err) => {
+          console.error('Clipboard write failed, falling back to download:', err);
+          try {
+            const blob = await buildBlob();
+            downloadBlob(blob);
+            showResult(true);
+          } catch (e2) {
+            showResult(false);
+          }
+        });
     } else {
-      doRender();
+      // クリップボード画像APIが使えない環境はダウンロードにフォールバック
+      buildBlob().then(blob => {
+        downloadBlob(blob);
+        showResult(true);
+      }).catch(() => showResult(false));
     }
   }
 
