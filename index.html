@@ -617,42 +617,104 @@
 
     return result;
   }
+function convertWord(word) {
+  // 数字の時制マーカー(1,2,3)は単語末尾にあれば別扱いで保持
+  let tenseMarker = '';
+  const m = word.match(/^([a-z]+)([123])$/i);
+  let core = word;
 
-  function convertWord(word) {
-    // 数字の時制マーカー(1,2,3)は単語末尾にあれば別扱いで保持
-    let tenseMarker = '';
-    const m = word.match(/^([a-z]+)([123])$/i);
-    let core = word;
-    if (m) {
-      core = m[1];
-      tenseMarker = m[2];
-    }
-
-    let chars = core.toLowerCase().split('');
-
-    // マジックeルール: 末尾がcの場合、cは発音せず（無音化）、
-    // cの前から2番目の音の読みが変化する（変化規則は未確定のため、現状は表示上cを除去するのみ）
-    let magicCApplied = false;
-    if (chars.length >= 1 && chars[chars.length - 1] === 'c') {
-      chars = chars.slice(0, -1); // cを無音化（発音対象から除去）
-      magicCApplied = true;
-    }
-
-    const processed = applyAHokan(chars);
-    let ipa = processed.map(ch => phonemeMap[ch] || ch).join('');
-    let kana = buildKatakana(processed);
-    // カナーカヌ文字表示用：無音化されたcも含め、元の綴りをそのまま専用フォントで表示
-    let kanaChars = processed.join('') + (magicCApplied ? 'c' : '');
-
-    if (tenseMarker) {
-      const tenseIPA = phonemeMap[tenseMarker] || tenseMarker;
-      ipa += tenseIPA;
-      kana += buildKatakana([tenseMarker]);
-      kanaChars += tenseMarker;
-    }
-
-    return { ipa, kana, kanaChars };
+  if (m) {
+    core = m[1];
+    tenseMarker = m[2];
   }
+
+  // ========================================
+  // 元の綴り
+  // → カナーカヌ文字として表示するために保存
+  // → ア補完は絶対にここには入れない
+  // ========================================
+  const originalChars = core.toLowerCase().split('');
+
+  // ========================================
+  // 発音処理用の文字列
+  // ========================================
+  let pronunciationChars = [...originalChars];
+
+  // ========================================
+  // マジックc
+  // c自体は発音しない
+  // ただし表示上は元のcを残す
+  // ========================================
+  let magicCApplied = false;
+
+  if (
+    pronunciationChars.length >= 1 &&
+    pronunciationChars[pronunciationChars.length - 1] === 'c'
+  ) {
+    pronunciationChars = pronunciationChars.slice(0, -1);
+    magicCApplied = true;
+  }
+
+  // ========================================
+  // ア補完
+  // ★ここでのみaを挿入する
+  // ★表示用のoriginalCharsには影響しない
+  // ========================================
+  const processed = applyAHokan(pronunciationChars);
+
+  // ========================================
+  // 発音記号を作る
+  // ========================================
+  let ipa = processed
+    .map(ch => phonemeMap[ch] || ch)
+    .join('');
+
+  // ========================================
+  // カタカナ発音を作る
+  // ア補完済みのprocessedを使用
+  // ========================================
+  let kana = buildKatakana(processed);
+
+  // ========================================
+  // マジックcによる発音変化
+  // ※ここに後で仕様を実装
+  // ========================================
+  if (magicCApplied) {
+    // cは無音なのでipa/kanaには追加しない
+    //
+    // 「cの前から2番目の音を変化させる」
+    // 処理はここに入れる
+  }
+
+  // ========================================
+  // カナーカヌ文字表示
+  // ★originalCharsなのでア補完されない
+  // ★magic-cのcも元の綴りどおり表示される
+  // ========================================
+  let kanaChars = originalChars.join('');
+
+  // ========================================
+  // 時制マーカー
+  // ========================================
+  if (tenseMarker) {
+    const tenseIPA = phonemeMap[tenseMarker] || tenseMarker;
+
+    // 発音には時制マーカーを追加
+    ipa += tenseIPA;
+
+    // カタカナ発音にも追加
+    kana += buildKatakana([tenseMarker]);
+
+    // 表示にも元々入力された時制マーカーを追加
+    kanaChars += tenseMarker;
+  }
+
+  return {
+    ipa,
+    kana,
+    kanaChars
+  };
+}
 
   function convertText(text) {
     const words = text.trim().split(/\s+/).filter(Boolean);
