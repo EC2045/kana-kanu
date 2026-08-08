@@ -266,7 +266,7 @@
   <section>
     <h2>発音変換ツール</h2>
     <div class="converter">
-      <input type="text" id="inputText" placeholder="ローマ字表記を入力（例：fk dks1 rmks）" autocomplete="off">
+      <input type="text" id="inputText" placeholder="ローマ字表記を入力（例：50 104 rm04）" autocomplete="off">
       <div class="result-grid">
         <div class="result-box kana">
           <div class="label">カナーカヌ文字</div>
@@ -298,19 +298,19 @@
     </div>
 
     <div class="example-block">
-      <div class="latin">fk dks1 rmks</div>
+      <div class="latin">50 1041 rm04</div>
       <div class="kana-row">
-        <div class="kana" data-latin="fk dks1 rmks"></div>
-        <button class="copy-btn" type="button" data-copy-target="fk dks1 rmks">コピー</button>
+        <div class="kana" data-latin="50 1041 rm04"></div>
+        <button class="copy-btn" type="button" data-copy-target="50 1041 rm04">コピー</button>
       </div>
       <div class="meaning">私はりんごを食べる。</div>
     </div>
 
     <div class="example-block">
-      <div class="latin">fk dks1 rmks rpsj</div>
+      <div class="latin">50 1041 rm04 rp4j</div>
       <div class="kana-row">
-        <div class="kana" data-latin="fk dks1 rmks rpsj"></div>
-        <button class="copy-btn" type="button" data-copy-target="fk dks1 rmks rpsj">コピー</button>
+        <div class="kana" data-latin="50 1041 rm04 rp4j"></div>
+        <button class="copy-btn" type="button" data-copy-target="50 1041 rm04 rp4j">コピー</button>
       </div>
       <div class="meaning">私は美しい（綺麗な）りんごを食べる。</div>
     </div>
@@ -339,16 +339,16 @@
       <table>
         <tr><th>単語</th><th>意味</th></tr>
         <tr><td><code>fk</code></td><td>私</td></tr>
-        <tr><td><code>dks</code></td><td>食べる</td></tr>
-        <tr><td><code>rmks</code></td><td>りんご</td></tr>
-        <tr><td><code>rpsj</code></td><td>綺麗、美しい</td></tr>
+        <tr><td><code>104</code></td><td>食べる</td></tr>
+        <tr><td><code>rm04</code></td><td>りんご</td></tr>
+        <tr><td><code>rp4j</code></td><td>綺麗、美しい</td></tr>
       </table>
     </div>
 
     <div class="grammar-section">
       <h3>■ 形容詞</h3>
       <p>形容詞は名詞の後ろに置く（後置修飾）。</p>
-      <p><code>fk dks1 rmks rpsj</code> ＝ 私は美しい（綺麗な）りんごを食べる。</p>
+      <p><code>50 1041 rm04 rp4j</code> ＝ 私は美しい（綺麗な）りんごを食べる。</p>
     </div>
 
     <div class="grammar-section">
@@ -407,11 +407,87 @@
       </p>
     </div>
 
+    <div class="grammar-section">
+      <h3>■ マジックc</h3>
+      <p>
+        英語のmagic-e（例：mad → made）と同様の仕組み。<br>
+        単語の末尾に <code>c</code> が来ると、<code>c</code> の前から2番目にあたる子音・母音の読み方が変化し、
+        <code>c</code> 自体は発音されない（無音化する）。
+      </p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 人称代名詞</h3>
+      <table>
+        <tr><th>単語</th><th>意味</th></tr>
+        <tr><td class="kana-cell">fk</td><td>私</td></tr>
+        <tr><td class="kana-cell">yn</td><td>あなた</td></tr>
+        <tr><td class="kana-cell">yt</td><td>貴様</td></tr>
+        <tr><td class="kana-cell">rt</td><td>彼／彼女（性別区別なし）</td></tr>
+        <tr><td class="kana-cell">rtn</td><td>彼ら／彼女ら（複数・性別区別なし）</td></tr>
+      </table>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">
+        複数形・所有格は接辞ではなく、それぞれ独立した単語として作る方針。
+      </p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 疑問文</h3>
+      <p>Yes/No疑問文は、文末に <code>ap</code> を置く。</p>
+      <div class="example-block">
+        <div class="latin">yn a30n2 ap</div>
+        <div class="kana-row">
+          <div class="kana" data-latin="yn a30n2 ap"></div>
+        </div>
+        <div class="meaning">あなたは眠りましたか？（挨拶「こんにちは」としても使用を検討中）</div>
+      </div>
+      <table style="margin-top:12px;">
+        <tr><th>単語</th><th>意味</th></tr>
+        <tr><td class="kana-cell">ap</td><td>Yes/No疑問文マーカー（文末）</td></tr>
+        <tr><td class="kana-cell">vlq</td><td>はい</td></tr>
+        <tr><td class="kana-cell">ɲb</td><td>いいえ</td></tr>
+      </table>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 場所構文（n...l）</h3>
+      <p>
+        <code>n</code> と <code>l</code> で語を挟むと「〜に／〜で」という場所を表す構文になる。<br>
+        例：<code>nq04l</code> ＝ ここに（<code>q04</code> ＝「ここ」）
+      </p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 語彙集</h3>
+      <table>
+        <tr><th>単語</th><th>意味</th></tr>
+        <tr><td class="kana-cell">104</td><td>食べる</td></tr>
+        <tr><td class="kana-cell">rm04</td><td>りんご</td></tr>
+        <tr><td class="kana-cell">rp4j</td><td>綺麗、美しい</td></tr>
+        <tr><td class="kana-cell">adl4</td><td>みかん</td></tr>
+        <tr><td class="kana-cell">a30n</td><td>寝る</td></tr>
+        <tr><td class="kana-cell">q04</td><td>ここ</td></tr>
+        <tr><td class="kana-cell">uj</td><td>例</td></tr>
+      </table>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 単語制作の方針</h3>
+      <p>
+        先に音（綴り）を作り、意味は後付けする作り方を採用している。
+      </p>
+    </div>
+
   </section>
 
 </main>
 
-
+<footer>
+  カナーカヌ語（YaRapaSh） ／ フォント：
+  <a href="https://ec2045.github.io/kana-kanu/kanakanu.ttf" target="_blank" rel="noopener">kanakanu.ttf</a>
+  ／ 参考：
+  <a href="https://ec2045.github.io/kana-kanu/" target="_blank" rel="noopener">ec2045.github.io/kana-kanu</a>
+</footer>
 
 <script>
   // ローマ字→発音記号（IPA風）対応表
@@ -435,8 +511,72 @@
     'k': 'ク', 's': 'ス', 'ts': 'ツ', 'w': 'ウ', 'ɡ': 'グ', 'r': 'ル', 'ʔ': 'ッ'
   };
 
+  // IPA子音記号 → カタカナ子音行（母音と組み合わせてモーラを作るためのベース）
+  // 各子音について、ア/イ/ウ/エ/オ の位置に来る変化形を定義
+  const consonantToKanaRow = {
+    'ɸ': { a: 'ファ', i: 'フィ', u: 'フ',  e: 'フェ', o: 'フォ' },
+    'ɹ':  { a: 'ラ',  i: 'リ',  u: 'ル',  e: 'レ',  o: 'ロ'  },
+    'r':  { a: 'ラ',  i: 'リ',  u: 'ル',  e: 'レ',  o: 'ロ'  },
+    'm':  { a: 'マ',  i: 'ミ',  u: 'ム',  e: 'メ',  o: 'モ'  },
+    'j':  { a: 'ヤ',  i: 'イ',  u: 'ユ',  e: 'イェ', o: 'ヨ'  },
+    'β':  { a: 'ヴァ', i: 'ヴィ', u: 'ヴ',  e: 'ヴェ', o: 'ヴォ' },
+    'h':  { a: 'ハ',  i: 'ヒ',  u: 'フ',  e: 'ヘ',  o: 'ホ'  },
+    'q':  { a: 'カ',  i: 'キ',  u: 'ク',  e: 'ケ',  o: 'コ'  },
+    'k':  { a: 'カ',  i: 'キ',  u: 'ク',  e: 'ケ',  o: 'コ'  },
+    'l':  { a: 'ラ',  i: 'リ',  u: 'ル',  e: 'レ',  o: 'ロ'  },
+    'z':  { a: 'ザ',  i: 'ジ',  u: 'ズ',  e: 'ゼ',  o: 'ゾ'  },
+    'f':  { a: 'ファ', i: 'フィ', u: 'フ',  e: 'フェ', o: 'フォ' },
+    'ʐ':  { a: 'ジャ', i: 'ジ',  u: 'ジュ', e: 'ジェ', o: 'ジョ' },
+    'ɲ':  { a: 'ニャ', i: 'ニ',  u: 'ニュ', e: 'ニェ', o: 'ニョ' },
+    'd':  { a: 'ダ',  i: 'ディ', u: 'ドゥ', e: 'デ',  o: 'ド'  },
+    'ʃʼ': { a: 'シャッ', i: 'シッ', u: 'シュッ', e: 'シェッ', o: 'ショッ' },
+    'ɬʼ': { a: 'クラッ', i: 'クリッ', u: 'クルッ', e: 'クレッ', o: 'クロッ' },
+    's':  { a: 'サ',  i: 'シ',  u: 'ス',  e: 'セ',  o: 'ソ'  },
+    'ts': { a: 'ツァ', i: 'ツィ', u: 'ツ',  e: 'ツェ', o: 'ツォ' },
+    'w':  { a: 'ワ',  i: 'ウィ', u: 'ウ',  e: 'ウェ', o: 'ウォ' },
+    'ɡ':  { a: 'ガ',  i: 'ギ',  u: 'グ',  e: 'ゲ',  o: 'ゴ'  },
+    'ʔ':  { a: 'ッア', i: 'ッイ', u: 'ッウ', e: 'ッエ', o: 'ッオ' }
+  };
+
+  // 単母音のみの場合のカタカナ（子音を伴わない場合）
+  const vowelOnlyKana = { a: 'ア', i: 'イ', u: 'ウ', e: 'エ', o: 'オ' };
+
+  // IPA母音記号 → ア行/イ行/ウ行/エ行/オ行のどれに近いか分類
+  const ipaVowelToRow = {
+    'a': 'a', 'o': 'o', 'y': 'u', 'i': 'i', 'æ': 'e', 'u': 'u', 'e': 'e', 'ɯ': 'u',
+    'ə': 'a', 'ɔ': 'o'
+  };
+
   function isVowelChar(ch) {
     return vowels.has(ch);
+  }
+
+  // 処理済み文字配列（ローマ字仮表記、ア補完適用済み）からカタカナを組み立てる。
+  // 子音1文字＋直後の母音1文字を1モーラとして処理し、行変化を反映する。
+  function buildKatakana(processedChars) {
+    let out = '';
+    for (let i = 0; i < processedChars.length; i++) {
+      const ch = processedChars[i];
+      if (isVowelChar(ch)) {
+        // 直前で子音が消費されていなければ単独母音として出力
+        const row = ipaVowelToRow[phonemeMap[ch]] || 'a';
+        out += vowelOnlyKana[row];
+      } else {
+        const ipaCons = phonemeMap[ch];
+        const next = processedChars[i + 1];
+        if (next && isVowelChar(next)) {
+          const row = ipaVowelToRow[phonemeMap[next]] || 'a';
+          const kanaRow = consonantToKanaRow[ipaCons];
+          out += kanaRow ? kanaRow[row] : '';
+          i++; // 母音を消費済みとしてスキップ
+        } else {
+          // 後ろに母音がない子音単体（ア補完が効いていれば通常発生しない）
+          const kanaRow = consonantToKanaRow[ipaCons];
+          out += kanaRow ? kanaRow['a'] : '';
+        }
+      }
+    }
+    return out;
   }
 
   // 1単語をア補完ルールに従って文字配列（挿入済み）に変換
@@ -500,14 +640,14 @@
 
     const processed = applyAHokan(chars);
     let ipa = processed.map(ch => phonemeMap[ch] || ch).join('');
-    let kana = processed.map(ch => ipaToKana[phonemeMap[ch]] || '').join('');
+    let kana = buildKatakana(processed);
     // カナーカヌ文字表示用：無音化されたcも含め、元の綴りをそのまま専用フォントで表示
     let kanaChars = processed.join('') + (magicCApplied ? 'c' : '');
 
     if (tenseMarker) {
       const tenseIPA = phonemeMap[tenseMarker] || tenseMarker;
       ipa += tenseIPA;
-      kana += ipaToKana[tenseIPA] || '';
+      kana += buildKatakana([tenseMarker]);
       kanaChars += tenseMarker;
     }
 
