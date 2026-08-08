@@ -2,7 +2,7 @@
 
 This software end user license agreement (hereinafter “Agreement”) is made
 between you or, if you represent a legal entity, that legal entity (hereinafter
-“You”) and “agar”, the copyright holder and designer (hereinafter
+“You”) and “agar(rits1019c1)”, the copyright holder and designer (hereinafter
 “Font Designer”) of the font software named “カナーカヌ”
 (hereinafter “Font Software”).
 
