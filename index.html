@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カナーカヌ語 - 発音・文法ガイド</title>
+<style>
+  @font-face {
+    font-family: 'KanaKanu';
+    src: url('https://github.com/EC2045/kana-kanu/blob/main/kanakanu.ttf?raw=true') format('truetype');
+    font-display: swap;
+  }
+
+  :root {
+    --bg: #08091a;
+    --panel: #12142c;
+    --panel-border: #23264d;
+    --accent: #7fd9ff;
+    --accent2: #ffb37f;
+    --text: #e8e9f5;
+    --text-dim: #9a9dc2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
+    background: radial-gradient(circle at 20% 10%, #14173a 0%, var(--bg) 60%);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 40px 20px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    margin: 0 0 8px;
+    letter-spacing: 0.05em;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  header p {
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  .kana-sample {
+    font-family: 'KanaKanu', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  section {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+
+  section h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    color: var(--accent2);
+    border-left: 4px solid var(--accent2);
+    padding-left: 12px;
+  }
+
+  .converter {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .converter input[type="text"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+    background: #0c0e24;
+    color: var(--text);
+    outline: none;
+  }
+
+  .converter input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 560px) {
+    .result-grid { grid-template-columns: 1fr; }
+  }
+
+  .result-box {
+    background: #0c0e24;
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .result-box .label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .result-box .value {
+    font-size: 1.4rem;
+    word-break: break-all;
+  }
+
+  .result-box.kana .value {
+    font-family: 'KanaKanu', sans-serif;
+    font-size: 1.8rem;
+    color: var(--accent);
+  }
+
+  .result-box.ipa .value { color: var(--accent2); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  th {
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  .example-block {
+    background: #0c0e24;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 12px 0;
+  }
+
+  .example-block .latin {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .example-block .kana {
+    font-family: 'KanaKanu', sans-serif;
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .example-block .meaning {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+  }
+
+  code {
+    background: #0c0e24;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+
+  .grammar-section {
+    margin-bottom: 20px;
+  }
+
+  .grammar-section h3 {
+    color: var(--accent);
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>カナーカヌ語（YaRapaSh）</h1>
+  <p>発音変換ツール ＆ 文法ガイド</p>
+</header>
+
+<main>
+
+  <section>
+    <h2>発音変換ツール</h2>
+    <div class="converter">
+      <input type="text" id="inputText" placeholder="ローマ字表記を入力（例：fk dks1 rmks）" autocomplete="off">
+      <div class="result-grid">
+        <div class="result-box kana">
+          <div class="label">カナーカヌ文字</div>
+          <div class="value" id="outputKana">—</div>
+        </div>
+        <div class="result-box ipa">
+          <div class="label">発音記号（IPA風）</div>
+          <div class="value" id="outputIPA">—</div>
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="label">カタカナ発音</div>
+        <div class="value" id="outputKatakana">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>例文</h2>
+
+    <div class="example-block">
+      <div class="latin">kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr</div>
+      <div class="kana" data-latin="kfb me9apc dv7goy3 5ihtz1 nq04l sx2w86 ujr"></div>
+      <div class="meaning">全ての文字は表示するために集まる、ここに。なぜならこれは例文だから。</div>
+    </div>
+
+    <div class="example-block">
+      <div class="latin">fk dks1 rmks</div>
+      <div class="kana" data-latin="fk dks1 rmks"></div>
+      <div class="meaning">私はりんごを食べる。</div>
+    </div>
+
+    <div class="example-block">
+      <div class="latin">fk dks1 rmks rpsj</div>
+      <div class="kana" data-latin="fk dks1 rmks rpsj"></div>
+      <div class="meaning">私は美しい（綺麗な）りんごを食べる。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>カナーカヌ語 文法</h2>
+
+    <div class="grammar-section">
+      <h3>■ 基本語順</h3>
+      <p>SVO（主語 - 動詞 - 目的語）</p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 時制・機能マーカー（動詞に付く数字接尾辞）</h3>
+      <table>
+        <tr><th>記号</th><th>意味</th></tr>
+        <tr><td>1</td><td>現在</td></tr>
+        <tr><td>2</td><td>過去</td></tr>
+        <tr><td>3</td><td>目的・ための表現</td></tr>
+      </table>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 主な単語</h3>
+      <table>
+        <tr><th>単語</th><th>意味</th></tr>
+        <tr><td><code>fk</code></td><td>私</td></tr>
+        <tr><td><code>dks</code></td><td>食べる</td></tr>
+        <tr><td><code>rmks</code></td><td>りんご</td></tr>
+        <tr><td><code>rpsj</code></td><td>綺麗、美しい</td></tr>
+      </table>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 形容詞</h3>
+      <p>形容詞は名詞の後ろに置く（後置修飾）。</p>
+      <p><code>fk dks1 rmks rpsj</code> ＝ 私は美しい（綺麗な）りんごを食べる。</p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 文字について</h3>
+      <p>
+        カナーカヌ語で使用される 1, 2, 3, 4 などの記号は数字ではありません。<br>
+        これらは文字体系の一部であり、専用フォントでは独自の文字として表示されます。<br>
+        「YaRapaSh」は通常の言語ではなく、独自の文字体系・表現形式です。
+      </p>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ 音素対応表（ローマ字仮表記 → 発音）</h3>
+      <table>
+        <tr><th>文字</th><th>音価</th><th>種別</th></tr>
+        <tr><td>a</td><td>[a]</td><td>母音</td></tr>
+        <tr><td>b</td><td>[o]</td><td>母音</td></tr>
+        <tr><td>e</td><td>[y]</td><td>母音</td></tr>
+        <tr><td>v</td><td>[i]</td><td>母音</td></tr>
+        <tr><td>3</td><td>[æ]</td><td>母音</td></tr>
+        <tr><td>n</td><td>[u]</td><td>母音</td></tr>
+        <tr><td>l</td><td>[e]</td><td>母音</td></tr>
+        <tr><td>i</td><td>[ɯ]</td><td>母音</td></tr>
+        <tr><td>m</td><td>[ɸ]</td><td>子音</td></tr>
+        <tr><td>9</td><td>[ɹ]</td><td>子音</td></tr>
+        <tr><td>p</td><td>[m]</td><td>子音</td></tr>
+        <tr><td>c</td><td>[j]</td><td>子音（語末で無音化マーカー）</td></tr>
+        <tr><td>d</td><td>[β]</td><td>子音</td></tr>
+        <tr><td>7</td><td>[h]</td><td>子音</td></tr>
+        <tr><td>g</td><td>[q]</td><td>子音</td></tr>
+        <tr><td>o</td><td>[l]</td><td>子音</td></tr>
+        <tr><td>y</td><td>[z]</td><td>子音</td></tr>
+        <tr><td>5</td><td>[f]</td><td>子音</td></tr>
+        <tr><td>t</td><td>[ʐ]</td><td>子音</td></tr>
+        <tr><td>z</td><td>[ɲ]</td><td>子音</td></tr>
+        <tr><td>1</td><td>[d]</td><td>子音（文法上は時制マーカー「現在」）</td></tr>
+        <tr><td>2</td><td>[ʃʼ]</td><td>子音（放出音）</td></tr>
+        <tr><td>q</td><td>[ɬʼ]</td><td>子音（放出音）</td></tr>
+        <tr><td>0</td><td>[k]</td><td>子音</td></tr>
+        <tr><td>4</td><td>[s]</td><td>子音</td></tr>
+        <tr><td>u</td><td>[ə]</td><td>母音</td></tr>
+        <tr><td>8</td><td>[ɔ]</td><td>母音</td></tr>
+        <tr><td>x</td><td>[ts]</td><td>子音</td></tr>
+        <tr><td>w</td><td>[w]</td><td>子音</td></tr>
+        <tr><td>j</td><td>[ɡ]</td><td>子音</td></tr>
+        <tr><td>r</td><td>[r]</td><td>子音</td></tr>
+        <tr><td>6</td><td>[ʔ]</td><td>子音</td></tr>
+      </table>
+    </div>
+
+    <div class="grammar-section">
+      <h3>■ ア補完</h3>
+      <p>
+        子音が3つ以上連続する場合、連続を断ち切るために最小限の1箇所に「a」の音を挿入する現象。<br>
+        単語が子音2文字のみで構成される場合は、語末に「a」を補う。
+      </p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  カナーカヌ語（YaRapaSh） ／ フォント：
+  <a href="https://github.com/EC2045/kana-kanu/blob/main/kanakanu.ttf" target="_blank" rel="noopener">kanakanu.ttf</a>
+  ／ 参考：
+  <a href="https://ec2045.github.io/kana-kanu/" target="_blank" rel="noopener">ec2045.github.io/kana-kanu</a>
+</footer>
+
+<script>
+  // ローマ字→発音記号（IPA風）対応表
+  const phonemeMap = {
+    'a': 'a', 'b': 'o', 'e': 'y', 'v': 'i', '3': 'æ', 'n': 'u', 'l': 'e', 'i': 'ɯ',
+    'u': 'ə', '8': 'ɔ',
+    'm': 'ɸ', '9': 'ɹ', 'p': 'm', 'c': 'j', 'd': 'β', '7': 'h', 'g': 'q', 'o': 'l',
+    'y': 'z', '5': 'f', 't': 'ʐ', 'z': 'ɲ', '1': 'd', '2': 'ʃʼ', 'q': 'ɬʼ', '0': 'k',
+    '4': 's', 'x': 'ts', 'w': 'w', 'j': 'ɡ', 'r': 'r', '6': 'ʔ'
+  };
+
+  // 母音のセット（ア補完・カタカナ変換判定に使用）
+  const vowels = new Set(['a','b','e','v','3','n','l','i','u','8']);
+
+  // 発音記号→カタカナ 近似対応
+  const ipaToKana = {
+    'a': 'ア', 'o': 'オ', 'y': 'ュ', 'i': 'イ', 'æ': 'ェ', 'u': 'ウ', 'e': 'エ', 'ɯ': 'ウ',
+    'ə': 'ア', 'ɔ': 'オ',
+    'ɸ': 'フ', 'ɹ': 'ル', 'm': 'ム', 'j': 'ヤ', 'β': 'ヴ', 'h': 'ハ', 'q': 'ク', 'l': 'ル',
+    'z': 'ズ', 'f': 'フ', 'ʐ': 'ジュ', 'ɲ': 'ニュ', 'd': 'ド', 'ʃʼ': 'シュッ', 'ɬʼ': 'クッ',
+    'k': 'ク', 's': 'ス', 'ts': 'ツ', 'w': 'ウ', 'ɡ': 'グ', 'r': 'ル', 'ʔ': 'ッ'
+  };
+
+  function isVowelChar(ch) {
+    return vowels.has(ch);
+  }
+
+  // 1単語をア補完ルールに従って文字配列（挿入済み）に変換
+  function applyAHokan(word) {
+    const chars = word.split('');
+    const result = [];
+    let consonantStreak = [];
+
+    function flushStreak(nextIsVowelOrEnd) {
+      if (consonantStreak.length === 0) return;
+      if (consonantStreak.length === 2 && nextIsVowelOrEnd) {
+        // 2文字子音のみの単語 → 語末にア補完
+        result.push(...consonantStreak);
+        result.push('a');
+      } else if (consonantStreak.length >= 3) {
+        // 3連続以上 → 最後の直前にa挿入
+        result.push(...consonantStreak.slice(0, -1));
+        result.push('a');
+        result.push(consonantStreak[consonantStreak.length - 1]);
+      } else {
+        result.push(...consonantStreak);
+      }
+      consonantStreak = [];
+    }
+
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      if (isVowelChar(ch)) {
+        flushStreak(false);
+        result.push(ch);
+      } else {
+        consonantStreak.push(ch);
+      }
+    }
+    // 末尾処理
+    flushStreak(true);
+
+    return result;
+  }
+
+  function convertWord(word) {
+    // 数字の時制マーカー(1,2,3)は単語末尾にあれば別扱いで保持
+    let tenseMarker = '';
+    const m = word.match(/^([a-z]+)([123])$/i);
+    let core = word;
+    if (m) {
+      core = m[1];
+      tenseMarker = m[2];
+    }
+
+    const processed = applyAHokan(core.toLowerCase());
+    let ipa = processed.map(ch => phonemeMap[ch] || ch).join('');
+    let kana = processed.map(ch => ipaToKana[phonemeMap[ch]] || '').join('');
+    let kanaChars = processed.join(''); // カナーカヌ文字表示用（同じローマ字仮表記を専用フォントで表示）
+
+    if (tenseMarker) {
+      const tenseIPA = phonemeMap[tenseMarker] || tenseMarker;
+      ipa += tenseIPA;
+      kana += ipaToKana[tenseIPA] || '';
+      kanaChars += tenseMarker;
+    }
+
+    return { ipa, kana, kanaChars };
+  }
+
+  function convertText(text) {
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    const ipaParts = [];
+    const kanaParts = [];
+    const kanaCharsParts = [];
+
+    words.forEach(w => {
+      const { ipa, kana, kanaChars } = convertWord(w);
+      ipaParts.push(ipa);
+      kanaParts.push(kana);
+      kanaCharsParts.push(kanaChars);
+    });
+
+    return {
+      ipa: ipaParts.join(' '),
+      kana: kanaParts.join(' '),
+      kanaChars: kanaCharsParts.join(' ')
+    };
+  }
+
+  const inputEl = document.getElementById('inputText');
+  const outKana = document.getElementById('outputKana');
+  const outIPA = document.getElementById('outputIPA');
+  const outKatakana = document.getElementById('outputKatakana');
+
+  function update() {
+    const text = inputEl.value;
+    if (!text.trim()) {
+      outKana.textContent = '—';
+      outIPA.textContent = '—';
+      outKatakana.textContent = '—';
+      return;
+    }
+    const { ipa, kana, kanaChars } = convertText(text);
+    outKana.textContent = kanaChars;
+    outIPA.textContent = '[' + ipa + ']';
+    outKatakana.textContent = kana;
+  }
+
+  inputEl.addEventListener('input', update);
+
+  // 例文のカナーカヌ文字表示（フォントで表示するのでそのままラテン仮表記を流し込む）
+  document.querySelectorAll('.example-block .kana').forEach(el => {
+    el.textContent = el.getAttribute('data-latin');
+  });
+</script>
+
+</body>
+</html>
